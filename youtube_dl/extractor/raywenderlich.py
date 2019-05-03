@@ -106,6 +106,7 @@ class RayWenderlichIE(InfoExtractor):
             headers = {
                 'Referer': url,
                 'X-Requested-With': 'XMLHttpRequest',
+                'Authorization': 'Token eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwY2U0MGMzMC01N2U4LTExZTYtYjczNC1jNzgyMTA5Mjc4Y2QiLCJpYXQiOjE1NTY4NTg5ODJ9.weVYfek9GuiizbCt-5cBTdgti0805yoC_z8EUHKJQh0',
             }
             csrf_token = self._html_search_meta(
                 'csrf-token', webpage, 'csrf token', default=None)

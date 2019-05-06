@@ -71,6 +71,12 @@ class RayWenderlichIE(InfoExtractor):
                 if video_id:
                     return compat_str(video_id)
 
+    def _search_thumbnail(self, webpage):
+        pattern = r'(https://files.betamax.raywenderlich.com/attachments/videos/.*?png)'
+        m = re.search(pattern, webpage)
+        thumbnail = m.group(0)
+        return thumbnail
+
     def _real_extract(self, url):
         mobj = re.match(self._VALID_URL, url)
         lesson_id = mobj.group('id')
@@ -81,6 +87,9 @@ class RayWenderlichIE(InfoExtractor):
         thumbnail = self._og_search_thumbnail(
             webpage, default=None) or self._html_search_meta(
             'twitter:image', webpage, 'thumbnail')
+        print(type(webpage))
+        if thumbnail is None:
+            thumbnail = self._search_thumbnail(webpage)
 
         if '>Subscribe to unlock' in webpage:
             raise ExtractorError(

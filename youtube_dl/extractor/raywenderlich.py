@@ -23,7 +23,7 @@ class RayWenderlichIE(InfoExtractor):
                             videos\.raywenderlich\.com/courses|
                             (?:www\.)?raywenderlich\.com
                         )/
-                        (?P<course_id>[^/]+)/lessons/(?P<id>\d+)
+                        (?P<id>[^/]+)
                     '''
 
     _TESTS = [{
@@ -73,8 +73,8 @@ class RayWenderlichIE(InfoExtractor):
 
     def _real_extract(self, url):
         mobj = re.match(self._VALID_URL, url)
-        course_id, lesson_id = mobj.group('course_id', 'id')
-        display_id = '%s/%s' % (course_id, lesson_id)
+        lesson_id = mobj.group('id')
+        display_id = '%s' % (lesson_id)
 
         webpage = self._download_webpage(url, display_id)
 
@@ -95,13 +95,7 @@ class RayWenderlichIE(InfoExtractor):
             r'data-vimeo-id=["\'](\d+)', webpage, 'vimeo id', default=None)
 
         if not vimeo_id:
-            data = self._parse_json(
-                self._search_regex(
-                    r'data-collection=(["\'])(?P<data>{.+?})\1', webpage,
-                    'data collection', default='{}', group='data'),
-                display_id, transform_source=unescapeHTML, fatal=False)
-            video_id = self._extract_video_id(
-                data, lesson_id) or self._search_regex(
+            video_id = self._search_regex(
                 r'/videos/(\d+)/', thumbnail, 'video id')
             headers = {
                 'Referer': url,
